@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ 'New' if is_new else 'Edit' }} {{ cfg.singular|lower }}</h1>
+<form method="post" class="card">
+  {% for column, label, kind, required in cfg.fields %}
+  {% set value = row[column] if row[column] is not none else '' %}
+  <label>{{ label }}
+    {% if kind == 'select' %}
+    <select name="{{ column }}" {{ 'required' if required }}>
+      <option value="">{{ '- select -' if required else '- none -' }}</option>
+      {% for option in options[column] %}
+      <option value="{{ option.id }}" {{ 'selected' if value|string == option.id|string }}>{{ option.name }}</option>
+      {% endfor %}
+    </select>
+    {% elif kind == 'number' %}
+    <input type="number" step="0.01" min="0" name="{{ column }}" value="{{ value }}" {{ 'required' if required }}>
+    {% elif kind == 'integer' %}
+    <input type="number" step="1" min="0" name="{{ column }}" value="{{ value }}" {{ 'required' if required }}>
+    {% else %}
+    <input type="{{ kind }}" name="{{ column }}" value="{{ value }}" {{ 'required' if required }}>
+    {% endif %}
+  </label>
+  {% endfor %}
+  <div class="buttons">
+    <button type="submit">Save</button>
+    <a href="{{ url_for('table_list', key=key) }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

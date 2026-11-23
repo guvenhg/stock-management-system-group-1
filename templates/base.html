@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Stock Management System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if session.user_id %}
+  <nav>
+    <span class="brand">Stock Management System</span>
+    <a href="{{ url_for('dashboard') }}">Stock</a>
+    <a href="{{ url_for('movements') }}">Movements</a>
+    <a href="{{ url_for('table_list', key='products') }}">Products</a>
+    <a href="{{ url_for('table_list', key='categories') }}">Categories</a>
+    <a href="{{ url_for('table_list', key='suppliers') }}">Suppliers</a>
+    <a href="{{ url_for('table_list', key='warehouses') }}">Warehouses</a>
+    {% if session.role == 'admin' %}<a href="{{ url_for('users') }}">Users</a>{% endif %}
+    <span class="spacer"></span>
+    <span class="who">{{ session.full_name }} ({{ session.role }})</span>
+    <a href="{{ url_for('logout') }}">Log out</a>
+  </nav>
+  {% endif %}
+  <main>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <p class="flash {{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ 'New' if is_new else 'Edit' }} user</h1>
+<form method="post" class="card">
+  <label>Username
+    <input type="text" name="username" maxlength="30" value="{{ row.username or '' }}" required>
+  </label>
+  <label>Full name
+    <input type="text" name="full_name" maxlength="80" value="{{ row.full_name or '' }}" required>
+  </label>
+  <label>Role
+    <select name="role" required>
+      <option value="user" {{ 'selected' if row.role == 'user' }}>user (standard user)</option>
+      <option value="admin" {{ 'selected' if row.role == 'admin' }}>admin</option>
+    </select>
+  </label>
+  <label>Password{% if not is_new %} (leave empty to keep the current one){% endif %}
+    <input type="password" name="password" {{ 'required' if is_new }}>
+  </label>
+  <div class="buttons">
+    <button type="submit">Save</button>
+    <a href="{{ url_for('users') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

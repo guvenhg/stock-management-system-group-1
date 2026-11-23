@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set is_admin = session.role == 'admin' %}
+{% block content %}
+<div class="head">
+  <h1>{{ cfg.title }}</h1>
+  {% if is_admin %}<a class="button" href="{{ url_for('table_new', key=key) }}">New {{ cfg.singular|lower }}</a>{% endif %}
+</div>
+<table>
+  <thead>
+    <tr>
+      {% for column, label in cfg.columns %}<th>{{ label }}</th>{% endfor %}
+      {% if is_admin %}<th></th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      {% for column, label in cfg.columns %}<td>{{ row[column] if row[column] is not none else '-' }}</td>{% endfor %}
+      {% if is_admin %}
+      <td class="actions">
+        <a href="{{ url_for('table_edit', key=key, row_id=row.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('table_delete', key=key, row_id=row.id) }}"
+              onsubmit="return confirm('Delete this record?')">
+          <button type="submit" class="link danger">Delete</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="{{ cfg.columns|length + 1 }}">No records yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

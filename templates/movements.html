@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set is_admin = session.role == 'admin' %}
+{% block content %}
+<div class="head">
+  <h1>Stock movements</h1>
+  <a class="button" href="{{ url_for('movement_new') }}">New stock movement</a>
+</div>
+<table>
+  <thead>
+    <tr><th>Date</th><th>Product</th><th>Warehouse</th><th>Type</th>
+        <th class="num">Quantity</th><th>Recorded by</th><th>Note</th>
+        {% if is_admin %}<th></th>{% endif %}</tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.movement_date.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>{{ row.product }}</td>
+      <td>{{ row.warehouse }}</td>
+      <td><span class="badge {{ 'ok' if row.movement_type == 'IN' else 'out' }}">{{ row.movement_type }}</span></td>
+      <td class="num">{{ row.quantity }}</td>
+      <td>{{ row.recorded_by }}</td>
+      <td>{{ row.note or '-' }}</td>
+      {% if is_admin %}
+      <td class="actions">
+        <form method="post" action="{{ url_for('movement_delete', movement_id=row.movement_id) }}"
+              onsubmit="return confirm('Delete this movement?')">
+          <button type="submit" class="link danger">Delete</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td colspan="8">No stock movements yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

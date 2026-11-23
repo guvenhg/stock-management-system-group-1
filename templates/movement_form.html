@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New stock movement</h1>
+<form method="post" class="card">
+  <label>Product
+    <select name="product_id" required>
+      <option value="">- select -</option>
+      {% for p in products %}
+      <option value="{{ p.product_id }}" {{ 'selected' if row.product_id == p.product_id|string }}>{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Warehouse
+    <select name="warehouse_id" required>
+      <option value="">- select -</option>
+      {% for w in warehouses %}
+      <option value="{{ w.warehouse_id }}" {{ 'selected' if row.warehouse_id == w.warehouse_id|string }}>{{ w.name }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Type
+    <select name="movement_type" required>
+      <option value="IN" {{ 'selected' if row.movement_type == 'IN' }}>IN (stock received)</option>
+      <option value="OUT" {{ 'selected' if row.movement_type == 'OUT' }}>OUT (stock sent or sold)</option>
+    </select>
+  </label>
+  <label>Quantity
+    <input type="number" name="quantity" min="1" step="1" value="{{ row.quantity or '' }}" required>
+  </label>
+  <label>Note
+    <input type="text" name="note" maxlength="200" value="{{ row.note or '' }}">
+  </label>
+  <div class="buttons">
+    <button type="submit">Save</button>
+    <a href="{{ url_for('movements') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

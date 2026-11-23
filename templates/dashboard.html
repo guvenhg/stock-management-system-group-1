@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="head">
+  <h1>Current stock</h1>
+  <a class="button" href="{{ url_for('movement_new') }}">New stock movement</a>
+</div>
+<table>
+  <thead>
+    <tr><th>Product</th><th>Category</th><th class="num">Unit price</th>
+        <th class="num">Min. stock</th><th class="num">In stock</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.name }}</td>
+      <td>{{ row.category }}</td>
+      <td class="num">{{ row.unit_price }}</td>
+      <td class="num">{{ row.min_stock }}</td>
+      <td class="num">{{ row.stock }}</td>
+      <td>{% if row.stock < row.min_stock %}<span class="badge low">Low stock</span>{% else %}<span class="badge ok">OK</span>{% endif %}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">No products yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
